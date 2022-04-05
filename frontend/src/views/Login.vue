@@ -1,5 +1,179 @@
+<script>
+export default {
+  name: "LogIn",
+  data() {
+    return {
+      restaurantName: "La belle vue",
+    }
+  },
+  computed: {
+    copyright() {
+      const currentYear = new Date().getFullYear()
+      return `Copyright ${this.restaurantName} ${currentYear}`
+    }
+  },
+  methods: {
+    addToShoppingCart(amount) {
+      this.shoppingCart += amount
+    }
+  }
+}
+</script>
+
+
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div>
+
+  <main>
+    <div class="title">
+      <h1>SE CONNECTER</h1>
+    </div>
+    <form>
+      <label for="email">Email</label>
+      <input type="text" name="email">
+
+      <label for="password">Mot-de-passe</label>
+      <input type="text" name="password">
+
+      <button type="submit">Se connecter</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>© Groupomania 2022</p>
+  </footer>
   </div>
+  
 </template>
+
+<style lang="scss">
+  $pink-peach : #d1515a; 
+  $light-blue : #325c9b;
+  $grey : #272727;
+  $dark-grey: #121212;
+  $dark-blue : #122542;
+
+  /*content*/
+
+  main{
+    padding: 30px 20px;
+  }
+
+  h1{
+    color: white;
+    font-size: 20px;
+  }
+
+  .title{
+    border-bottom: 3px $grey solid;
+    padding-bottom: 10px;
+  }
+
+  form{
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  label{
+    color: $pink-peach;
+    font-size: 19px;
+  }
+
+  input{
+    margin: 5px 0 50px 0;
+    padding: 15px;
+    font-size: 19px;
+    border-radius: 13px;
+    border: 3px $light-blue solid;
+  }
+
+  button{
+    padding: 20px;
+    margin: 10px auto 70px auto;
+    border-radius: 50px;
+    border:  none;
+    font-size: 20px;
+    background: $light-blue;
+    color: white;
+    font-weight: bold;
+    width: 200px;
+    transition-duration: 300ms;
+    &:hover{
+      transform: scale(1.05);
+      background: $pink-peach;
+    }
+  }
+
+  /*footer*/
+
+  footer{
+    color: $grey;
+    width: 100%;
+    bottom: 0px;
+    position: fixed;
+    padding: 5px 0 5px 5px;
+    background: rgba($dark-grey, 0.9);
+  }
+
+  @media screen and (min-width: 1025px) {
+    header{
+      position: fixed;
+      width: 100%;
+    }
+
+    main{
+      padding-top: 200px;
+    }
+
+    nav{
+      width: 96%;
+    }
+
+    .logo a{
+      padding: 5px 15px;
+      width: 410px;
+      &:hover .line-logo{
+        transform: scaleX(1.0);
+      }
+      &:hover img{
+        filter : opacity(100%);
+      }
+    }
+
+    #logo{
+      width: 19%;
+    }
+
+    #text{
+      width: 100%;
+    }
+
+    h1{
+      font-size: 27px;
+    }
+
+    label{
+      font-size: 21px;
+    }
+
+    form{
+      margin: 0 25%;
+    }
+
+    input{
+      font-size: 21px;
+      padding: 18px 15px;
+    }
+
+    nav a{
+      font-size: 21px;
+    }
+
+    button{
+      font-size: 23px;
+    }
+
+  }
+</style>
+
