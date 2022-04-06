@@ -1,6 +1,13 @@
 <script>
+import HeaderNav from '../components/header.vue'
+import FooterText from '../components/footer.vue'
+
 export default {
   name: "LogIn",
+  components: {
+    HeaderNav,
+    FooterText
+  },
   data() {
     return {
       restaurantName: "La belle vue",
@@ -20,30 +27,25 @@ export default {
 }
 </script>
 
-
 <template>
   <div>
+    <HeaderNav />
+    <main>
+      <div class="title">
+        <h1>SE CONNECTER</h1>
+      </div>
+      <form>
+        <label for="email">Email</label>
+        <input type="text" name="email">
 
-  <main>
-    <div class="title">
-      <h1>SE CONNECTER</h1>
-    </div>
-    <form>
-      <label for="email">Email</label>
-      <input type="text" name="email">
+        <label for="password">Mot-de-passe</label>
+        <input type="text" name="password">
 
-      <label for="password">Mot-de-passe</label>
-      <input type="text" name="password">
-
-      <button type="submit">Se connecter</button>
-    </form>
-  </main>
-
-  <footer>
-    <p>© Groupomania 2022</p>
-  </footer>
+        <button type="submit">Se connecter</button>
+      </form>
+    </main>
+    <FooterText/>
   </div>
-  
 </template>
 
 <style lang="scss">
@@ -56,7 +58,7 @@ export default {
   /*content*/
 
   main{
-    padding: 30px 20px;
+    padding: 10px 20px;
   }
 
   h1{
@@ -105,48 +107,9 @@ export default {
     }
   }
 
-  /*footer*/
-
-  footer{
-    color: $grey;
-    width: 100%;
-    bottom: 0px;
-    position: fixed;
-    padding: 5px 0 5px 5px;
-    background: rgba($dark-grey, 0.9);
-  }
-
   @media screen and (min-width: 1025px) {
-    header{
-      position: fixed;
-      width: 100%;
-    }
-
     main{
-      padding-top: 200px;
-    }
-
-    nav{
-      width: 96%;
-    }
-
-    .logo a{
-      padding: 5px 15px;
-      width: 410px;
-      &:hover .line-logo{
-        transform: scaleX(1.0);
-      }
-      &:hover img{
-        filter : opacity(100%);
-      }
-    }
-
-    #logo{
-      width: 19%;
-    }
-
-    #text{
-      width: 100%;
+      padding-top: 190px;
     }
 
     h1{
@@ -164,10 +127,6 @@ export default {
     input{
       font-size: 21px;
       padding: 18px 15px;
-    }
-
-    nav a{
-      font-size: 21px;
     }
 
     button{

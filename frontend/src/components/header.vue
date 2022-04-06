@@ -1,41 +1,38 @@
-<template>
-  <header>
-    <div class="logo">
-      <a href="#">
-        <img src="../assets/logo.svg" id="logo">
-        <img src="../assets/groupomania.svg" id="text">
-        <span class="line-logo"></span>
-      </a>
-    </div>
-    <nav>
-      <a href="#">Se connecter</a>
-      <a href="#">S'inscire</a>
-    </nav>
-  </header>
-</template>
-
 <script>
 export default {
-  name: 'header',
-  components: {
-    BaseButton
-  },
+  name: 'HeaderNav',
   data() {
     return {
       online: false
     }
   },
   beforeMount() {
-    const today = new Date().getDate()
-
-    if (today % 2 === 0) {
-      this.onSale = true
-    }
+    this.online = this.$store.state.online
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<template>
+  <div>
+    <header v-if="online === false">
+      <div class="logo">
+        <a href="/">
+          <img src="../assets/logo.svg" id="logo">
+          <img src="../assets/groupomania.svg" id="text">
+          <span class="line-logo"></span>
+        </a>
+      </div>
+      <nav>
+        <router-link to="/login">Se connecter</router-link>
+        <router-link to="/signup">S'inscire</router-link>
+      </nav>
+    </header>
+    <header v-if="online === true">
+      <p>Coucou</p>
+    </header>
+  </div>
+</template>
+
 <style scoped lang="scss">
   $pink-peach : #d1515a; 
   $dark-blue : #122542;
@@ -96,6 +93,39 @@ export default {
         transform: scale(1.05);
         border-bottom: 3px $dark-blue solid;
       }
+    }
+  }
+  @media screen and (min-width: 1025px) {
+    header{
+      position: fixed;
+      width: 100%;
+    }
+
+    nav{
+      width: 96%;
+    }
+
+    nav a{
+      font-size: 21px;
+    }
+
+    .logo a{
+      padding: 5px 15px;
+      width: 410px;
+      &:hover .line-logo{
+        transform: scaleX(1.0);
+      }
+      &:hover img{
+        filter : opacity(100%);
+      }
+    }
+
+    #logo{
+      width: 19%;
+    }
+
+    #text{
+      width: 100%;
     }
   }
 </style>
