@@ -2,9 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import SignUpView from '../views/SignUp.vue'
 import LoginView from '../views/Login.vue'
-import ActivityView from '../views/Login.vue'
+import ActivityView from '../views/Activity.vue'
 import DashboardView from '../views/Login.vue'
-import ParamsView from '../views/Login.vue'
+import ParamsView from '../views/Params.vue'
 import AdminView from '../views/Login.vue'
 
 Vue.use(VueRouter)
@@ -36,7 +36,8 @@ const routes = [
     component: DashboardView
   },
   {
-    path: '/params/:id',
+    //path: '/params/:id',
+    path: '/params',
     name: 'params',
     component: ParamsView
   },

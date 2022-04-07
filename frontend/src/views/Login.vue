@@ -8,22 +8,6 @@ export default {
     HeaderNav,
     FooterText
   },
-  data() {
-    return {
-      restaurantName: "La belle vue",
-    }
-  },
-  computed: {
-    copyright() {
-      const currentYear = new Date().getFullYear()
-      return `Copyright ${this.restaurantName} ${currentYear}`
-    }
-  },
-  methods: {
-    addToShoppingCart(amount) {
-      this.shoppingCart += amount
-    }
-  }
 }
 </script>
 
@@ -48,11 +32,10 @@ export default {
   </div>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
   $pink-peach : #d1515a; 
   $light-blue : #325c9b;
   $grey : #272727;
-  $dark-grey: #121212;
   $dark-blue : #122542;
 
   /*content*/
