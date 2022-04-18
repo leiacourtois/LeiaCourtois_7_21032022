@@ -16,11 +16,11 @@ export default {
   <div>
     <header v-if="online === false" class="offline">
       <div class="logo-offline">
-        <a href="/">
+        <router-link to="/">
           <img src="../assets/logo.svg" id="logo">
           <img src="../assets/groupomania.svg" id="text">
           <span class="line-logo line-logo-offline"></span>
-        </a>
+        </router-link>
       </div>
       <nav class="nav-offline">
         <router-link to="/login">Se connecter</router-link>
@@ -28,20 +28,20 @@ export default {
       </nav>
     </header>
     <header v-if="online === true" class="online">
-      <a href="#" class="logo-online">
-        <img src="../assets/logo.svg" id="logo">
-        <img src="../assets/groupomania.svg" id="text">
-        <span class="line-logo line-logo-online"></span>
-      </a>
+      <router-link to="/activity" class="logo-online">
+          <img src="../assets/logo.svg" id="logo">
+          <img src="../assets/groupomania.svg" id="text">
+          <span class="line-logo line-logo-offline"></span>
+      </router-link>
       <nav class="nav-online">
         <div>
           <router-link to="/login"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link>
           <router-link to="/params"><i class="fa-solid fa-screwdriver-wrench"></i></router-link>
         </div>
-        <a href="#">
+        <router-link to="/dashboard">
           <img src="../assets/user.svg" id="user-nav">
           <span class="log-on"></span>
-        </a>
+        </router-link>
       </nav>
     </header>
   </div>

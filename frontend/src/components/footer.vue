@@ -6,7 +6,7 @@ export default {
 
 <template>
   <footer>
-    <p>© Groupomania 2022</p>
+    <p><i class="fa-regular fa-copyright"></i> Groupomania 2022</p>
   </footer>
 </template>
 

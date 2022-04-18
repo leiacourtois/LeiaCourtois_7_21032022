@@ -6,7 +6,7 @@ export default {
   name: "ParamsUser",
   components: {
     HeaderNav,
-    FooterText,
+    FooterText
   },
 }
 </script>

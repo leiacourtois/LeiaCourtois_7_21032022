@@ -1,6 +1,11 @@
 <script>
 export default {
   name: 'PostUsers',
+  data() {
+    return {
+      showComments: false
+    }
+  },
 }
 </script>
 
@@ -19,15 +24,26 @@ export default {
         <i class="fa-solid fa-trash-can"></i>
       </div>
     </div>
-    <p class="text-post">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </p>
+    <div class="text-post">
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.   
+      </p>
+    </div>
     <div class="last-row">
-      <div class="comments">
+      <div @click="showComments = !showComments" class="comments">
         <i class="fa-solid fa-comments"></i>
         <p> 7 comentaires</p>
       </div>
-      
+    </div>
+    <div v-show="showComments" class="comments-section">
+      <div>
+        <h4>Jane Nada</h4>
+        <p>Super Cool !</p>
+      </div>
+      <div>
+        <h4>Jean Dupont</h4>
+        <p>Ullamcorper velit sed ullamcorper morbi tincidunt ornare massa eget. Egestas erat imperdiet sed euismod nisi. Molestie at elementum eu facilisis sed. Sapien et ligula ullamcorper malesuada. Tortor at auctor urna nunc id cursus metus. </p>
+      </div>
     </div>
   </div>
 </template>
@@ -48,7 +64,7 @@ export default {
     background: $grey;
     border-radius: 15px;
     padding: 4px 8px;
-    margin-top: 20px;
+    margin: 20px 0;
   }
 
   .first-row{
@@ -86,11 +102,19 @@ export default {
   }
 
   .text-post{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     color: white;
     padding: 5px 0;
     font-size: 13px;
     line-height: 20px;
     border-bottom: 2px $light-blue solid;
+    img{
+      margin: 10px 0;
+      max-width: 100%;
+      max-height: 500px;
+    }
   }
 
   .last-row{
@@ -120,6 +144,29 @@ export default {
       padding: 5px 5px 7px 5px;
     }
   }
+
+  .comments-section{
+    border-top: 2px $light-blue solid;
+    margin-top: 5px;
+    padding: 7px 0;
+    div{
+      display: flex ;
+      background: rgba($light-blue, 0.4);
+      margin: 7px 0;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    h4{
+      color: $pink-peach;
+      margin-right: 20px;
+      font-size: 14px;
+    }
+    p{
+      color: white;
+      font-size: 13px;
+    }
+  }
+
   @media screen and (min-width: 1025px) {
     .pseudo{
       font-size: 22px;
@@ -156,5 +203,14 @@ export default {
         font-size: 20px;
       }
     }
+
+    .comments-section{
+    h4{
+      font-size: 19px;
+    }
+    p{
+      font-size: 17px;
+    }
+  }
   }
 </style>

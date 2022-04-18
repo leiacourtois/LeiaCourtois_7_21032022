@@ -130,7 +130,7 @@ export default {
     @media screen and (min-width: 1025px) {
 
       main{
-        padding: 120px 20% 0 20%;
+        padding: 120px 20% 60px 20%;
       }
 
       textarea{
