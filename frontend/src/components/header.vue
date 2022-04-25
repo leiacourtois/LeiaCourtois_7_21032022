@@ -3,7 +3,7 @@ export default {
   name: 'HeaderNav',
   data() {
     return {
-      online: true
+      online: false
     }
   },
   beforeMount() {

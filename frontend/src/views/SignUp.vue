@@ -5,6 +5,34 @@ export default {
   components: {
     HeaderNav
   },
+  data() {
+    return{
+      pseudo:'',
+      email: '',
+      password: '',
+      passwordConfirmation: ''
+    }
+  },
+  methods: {
+    pseudoInput() {
+      let testVar = this.$store.state.regex.text.test(this.pseudo);
+      if(testVar === true){
+        document.getElementsByClassName('errorMsg__Pseudo')[0].innerHTML= ''
+      } else{
+        document.getElementsByClassName('errorMsg__Pseudo')[0].innerHTML= 'Saisie invalide'
+      }
+    },
+    sendData() {
+      if( this.password === this.passwordConfirmation){
+        let user = {
+          pseudo : this.pseudo,
+          email : this.email,
+          password : this.password,
+        }
+        alert(user)
+      }
+    }
+  },
 }
 </script>
 
@@ -17,18 +45,19 @@ export default {
       </div>
       <form>
         <label for="username">Nom d'utilisateur*</label>
-        <input type="text" name="username">
+        <input @change="pseudoInput" type="text" name="username" v-model="pseudo"/>
+        <p class="errorMsg errorMsg__Pseudo"></p>
 
         <label for="email">Email*</label>
-        <input type="text" name="email">
+        <input type="text" name="email" v-model="email"/>
 
         <label for="password">Mot-de-passe*</label>
-        <input type="text" name="password">
+        <input type="password" name="password" v-model="password"/>
 
         <label for="password">Confirmation du mot-de-passe*</label>
-        <input type="text" name="password">
+        <input type="password" name="password" v-model="passwordConfirmation"/>
 
-        <button type="submit">S'inscrire</button>
+        <button @click="sendData" type="submit">S'inscrire</button>
       </form>
     </main>
 
