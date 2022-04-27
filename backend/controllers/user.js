@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../models');
 const User = db.user;
-
 let schemaPassword = new passwordValidator();
 
 schemaPassword
@@ -21,7 +20,7 @@ const schema = Joi.object({
     email: Joi.string().email()
 })
 
-/*exports.signup = (req, res, next) => {
+exports.signup = (req, res, next) => {
   let myObj = {
     email: req.body.email
   };
@@ -30,14 +29,15 @@ const schema = Joi.object({
   if(!result.error && isValid){
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
-      const user = new User({
-        pseudo: req.body.pseudo
+      const user = {
+        pseudo: req.body.pseudo,
         email: req.body.email,
-        password: hash
-      });
-      user.save()
-        .then(() => res.status(201).json({ message: 'user created' }))
-        .catch(error => res.status(400).json({ error }));
+        password: hash,
+        roleId: 1
+      };
+      User.create(user)
+      .then(() => res.status(201).json({ message: 'user created' }))
+      .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
   } else{
@@ -46,23 +46,24 @@ const schema = Joi.object({
 };
 
 exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  User.findAll({ where: { email: req.body.email } })
     .then(user => {
       if (!user) {
         return res.status(401).json({ error: 'user not found ' });
       }
-      bcrypt.compare(req.body.password, user.password)
+      bcrypt.compare(req.body.password, user[0].password)
         .then(valid => {
           if (!valid) {
             return res.status(401).json({ error: 'incorrect password' });
           }
           res.status(200).json({
-            userId: user._id,
+            id: user[0].id,
             token: jwt.sign(
-              { userId: user._id },
+              { id: user[0].id },
               process.env.SECRET_KEY,
               { expiresIn: '24h' }
-            )
+            ),
+            role: user[0].roleId
           });
         })
         .catch(error => res.status(500).json({ error }));

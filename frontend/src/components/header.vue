@@ -7,7 +7,14 @@ export default {
     }
   },
   beforeMount() {
-    /*this.online = this.$store.state.online*/
+    this.online = this.$store.state.online
+  },
+  methods: {
+    logOut() {
+      localStorage.removeItem('userInfo');
+      this.$store.state.online = false
+      this.$router.push({path: '/login'});
+    }
   }
 }
 </script>
@@ -35,7 +42,7 @@ export default {
       </router-link>
       <nav class="nav-online">
         <div>
-          <router-link to="/login"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link>
+          <i class="fa-solid fa-arrow-right-from-bracket" @click="logOut"></i>
           <router-link to="/params"><i class="fa-solid fa-screwdriver-wrench"></i></router-link>
         </div>
         <router-link to="/dashboard">

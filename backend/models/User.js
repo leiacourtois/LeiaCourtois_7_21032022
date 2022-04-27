@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
       unique: true
     },
     password: {
-      type: Sequelize.STRING(30),
+      type: Sequelize.STRING(191),
       allowNull: false
     },
     bio:{

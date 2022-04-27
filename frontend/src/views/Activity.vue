@@ -10,6 +10,8 @@ export default {
     FooterText,
     PostUsers
   },
+  data() {
+  }
 }
 </script>
 

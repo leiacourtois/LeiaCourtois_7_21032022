@@ -1,13 +1,52 @@
 <script>
 import HeaderNav from '../components/header.vue'
 import FooterText from '../components/footer.vue'
-
+const axios = require('axios')
 export default {
   name: "LogIn",
   components: {
     HeaderNav,
     FooterText
   },
+  data() {
+    return{
+      sendVar: false,
+      email: '',
+      password: '',
+    }
+  },
+  methods: {
+    emailInput() {
+      let testVar = this.$store.state.regex.email.test(this.email);
+      if(testVar === true){
+        this.sendVar = true
+      } else{
+        this.sendVar = false
+      }
+    },
+    sendData() {
+      if(this.sendVar === true){
+        let user = {
+          email : this.email,
+          password : this.password,
+        }
+        console.log(user)
+        axios.post('http://localhost:3000/api/auth/login', user)
+        .then(response =>{
+          console.log(response)
+          let userArray = [response.data.id, response.data.token, response.data.role]
+          sessionStorage.setItem('userInfo', JSON.stringify(userArray));
+          this.$store.state.online = true
+          this.$router.push({path: '/activity'});
+        })
+        .catch(error => {
+          alert(`Quelque chose s'est mal passé. ${error}`)
+        });
+      } else{
+        alert('Certains champs sont invalides')
+      }
+    }
+  }
 }
 </script>
 
@@ -20,12 +59,12 @@ export default {
       </div>
       <form>
         <label for="email">Email</label>
-        <input type="text" name="email">
+        <input @change="emailInput" type="text" name="email" v-model="email">
 
         <label for="password">Mot-de-passe</label>
-        <input type="text" name="password">
+        <input type="password" name="password" v-model="password">
 
-        <button type="submit">Se connecter</button>
+        <button @click="sendData" type="button">Se connecter</button>
       </form>
     </main>
     <FooterText/>
