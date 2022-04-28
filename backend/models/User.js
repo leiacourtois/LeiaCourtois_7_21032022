@@ -16,6 +16,11 @@ module.exports = (sequelize, Sequelize) => {
     bio:{
       type: Sequelize.TEXT,
       allowNull: true
+    },
+    picture:{
+      type: Sequelize.STRING(191),
+      allowNull: true,
+      defaultValue: null
     }
   }, 
   {

@@ -2,7 +2,6 @@
 import HeaderNav from '../components/header.vue'
 import FooterText from '../components/footer.vue'
 import PostUsers from '../components/post.vue'
-
 export default {
   name: "ActivityView",
   components: {
@@ -11,6 +10,12 @@ export default {
     PostUsers
   },
   data() {
+    return {
+      userInfo: ''
+    }
+  },
+  beforeMount() {
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
   }
 }
 </script>
@@ -21,8 +26,9 @@ export default {
     <main>
       <form>
         <div class="user">
-          <img src="../assets/user.svg">
-          <h3 class="pseudo">John Doe</h3>
+          <img v-if="userInfo[3] === null" src="../assets/user.svg">
+          <img v-else src="">
+          <h3 class="pseudo">{{userInfo[2]}}</h3>
         </div>
         <textarea name="post" placeholder="Écrivez quelque chose"></textarea>
         <div class="photo-button">

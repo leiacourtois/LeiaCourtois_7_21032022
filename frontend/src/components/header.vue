@@ -3,11 +3,13 @@ export default {
   name: 'HeaderNav',
   data() {
     return {
-      online: false
+      online: false,
+      userInfo: ''
     }
   },
   beforeMount() {
     this.online = this.$store.state.online
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
   },
   methods: {
     logOut() {
@@ -46,7 +48,8 @@ export default {
           <router-link to="/params"><i class="fa-solid fa-screwdriver-wrench"></i></router-link>
         </div>
         <router-link to="/dashboard">
-          <img src="../assets/user.svg" id="user-nav">
+          <img v-if="userInfo[3] === null" src="../assets/user.svg" id="user-nav">
+          <img v-else src="" id="user-nav">
           <span class="log-on"></span>
         </router-link>
       </nav>
