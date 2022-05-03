@@ -12,11 +12,11 @@ const limiterLogin = rateLimit({
   legacyHeaders: false,
 })
 
-db.sequelize.sync({ force: true }).then(() => {
+/*db.sequelize.sync({ force: true }).then(() => {
   db.role.create({ name : "employé" })
   db.role.create({ name : "admin" })
   console.log("Drop and re-sync db.");
-});
+});*/
 
 const app = express();
 
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-//app.use('/images', express.static(path.join(__dirname, 'images')));
-//app.use('/api/sauces', userRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/api/post', postRoutes);
 app.use('/api/auth', limiterLogin, userRoutes);
 module.exports = app;

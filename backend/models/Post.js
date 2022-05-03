@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     image: {
-      type: Sequelize.STRING(30),    
+      type: Sequelize.STRING(191),    
     },
   }, 
   {
