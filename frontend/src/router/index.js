@@ -31,8 +31,7 @@ const routes = [
     component: ActivityView
   },
   {
-    //path: '/dashboard/:id',
-    path: '/dashboard/',
+    path: '/dashboard/:id',
     name: 'dashboard',
     component: DashboardView
   },

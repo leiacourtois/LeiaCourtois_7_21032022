@@ -35,7 +35,6 @@ exports.signup = (req, res, next) => {
         password: hash,
         roleId: 1
       };
-      console.log(user)
       User.create(user)
       .then(() => res.status(201).json({ message: 'user created' }))
       .catch(error => res.status(400).json({ error }));

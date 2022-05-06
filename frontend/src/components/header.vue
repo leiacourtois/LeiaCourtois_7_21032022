@@ -8,13 +8,21 @@ export default {
     }
   },
   beforeMount() {
-    this.online = this.$store.state.online
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    if(this.userInfo){
+      console.log("connecté")
+      this.online = true
+    } else if (!this.userInfo){
+      console.log("non connecté")
+      this.online = false
+    }
+    this.$store.state.online = this.online
   },
   methods: {
     logOut() {
-      localStorage.removeItem('userInfo');
+      sessionStorage.removeItem('userInfo');
       this.$store.state.online = false
+      this.online = false
       this.$router.push({path: '/login'});
     }
   }
@@ -40,14 +48,14 @@ export default {
       <router-link to="/activity" class="logo-online">
           <img src="../assets/logo.svg" id="logo">
           <img src="../assets/groupomania.svg" id="text">
-          <span class="line-logo line-logo-offline"></span>
+          <span class="line-logo line-logo-online"></span>
       </router-link>
       <nav class="nav-online">
         <div>
           <i class="fa-solid fa-arrow-right-from-bracket" @click="logOut"></i>
           <router-link to="/params"><i class="fa-solid fa-screwdriver-wrench"></i></router-link>
         </div>
-        <router-link to="/dashboard">
+        <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}">
           <img v-if="userInfo[3] === null" src="../assets/user.svg" id="user-nav">
           <img v-else src="" id="user-nav">
           <span class="log-on"></span>
@@ -162,6 +170,7 @@ export default {
       margin: 10px 10px 0 10px;
       transition-duration: 300ms;
       z-index: 1;
+      cursor: pointer;
       &:hover{
         color:  #122542;
         transform: scale(0.9);

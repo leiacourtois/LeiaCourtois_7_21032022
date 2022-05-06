@@ -1,13 +1,56 @@
 <script>
 import FooterText from '../components/footer.vue'
 import PostUsers from '../components/post.vue'
-
+import FormPost from '../components/form.vue'
+const axios = require('axios')
 export default {
   name: "DashBoard",
   components: {
     FooterText,
-    PostUsers
+    PostUsers,
+    FormPost
   },
+  data(){
+    return {
+      userInfo: '',
+      user: '',
+      posts: '',
+      userBoardId: '',
+      emailMailto: ''
+    }
+  },
+  beforeCreate(){
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    if(!userInfo){
+      this.$router.push({path: '/login'});
+    }
+  },
+  beforeMount(){
+    this.userBoardId = this.$route.params.id
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    axios.get(`http://localhost:3000/api/post/${this.userBoardId}`, {
+      headers:{
+          'Authorization' : `Token ${this.userInfo[1]}`
+      }
+    })
+    .then(response => {
+      this.posts = response.data.posts
+      this.user = response.data
+    })
+    .catch(error => {
+      alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
+    });
+
+    this.emailMailto = 'mailto:' + this.user.email
+  },
+  methods: {
+    logOut() {
+      sessionStorage.removeItem('userInfo');
+      this.$store.state.online = false
+      this.online = false
+      this.$router.push({path: '/login'});
+    }
+  }
 }
 </script>
 
@@ -20,41 +63,38 @@ export default {
           <span class="line-logo"></span>
       </router-link>
       <nav>
-        <router-link to="/login"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link>
+        <i class="fa-solid fa-arrow-right-from-bracket" @click="logOut"></i>
         <router-link to="/params"><i class="fa-solid fa-screwdriver-wrench"></i></router-link>
       </nav>
-      <router-link to="/dashboard"><img src="../assets/user.svg" id="user-nav"></router-link>
+      <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}"><img src="../assets/user.svg" id="user-nav"></router-link>
       <span class="log-on"></span>
     </header>
 
     <main>
       <aside>
         <div class="user-info">
-          <h1>JOHN DOE</h1>
-          <h2>Employé</h2>
-          <a href="mailto:johndoe@email.com"><p>johndoe@email.com</p></a>
+          <h1>{{user.pseudo}}</h1>
+          <h2 v-if="user.roleId === 1" >Employé</h2>
+          <h2 v-else-if="user.roleId === 2">Admin</h2>
+          <a :href="emailMailto"><p>{{user.email}}</p></a>
         </div>
         <div class="bio">
           <h3>Biographie</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>{{user.bio}}</p>
         </div>
       </aside>
 
-      <form>
-        <div class="user">
-          <img src="../assets/user.svg">
-          <h3 class="pseudo">John Doe</h3>
-        </div>
-        <textarea name="post" placeholder="Écrivez quelque chose"></textarea>
-        <div class="photo-button">
-          <div>
-            <i class="fa-solid fa-image"></i>
-            <p>Ajoutez une photo</p>
-          </div>
-          <button>Publier</button>
-        </div>
-      </form>
-      <PostUsers/>
+      <FormPost v-if="userBoardId === userInfo[0]"/>
+      <PostUsers
+        v-for="post in posts"
+        :pfp="user.picture"
+        :pseudo="user.pseudo"
+        :image="post.image"
+        :text="post.text"
+        :date="post.date"
+        :userId="user.id"
+        :key="post.id"
+      />
     </main>
     <FooterText/>
   </div>
@@ -124,6 +164,7 @@ export default {
       margin: 15px 0 0 28px;
       transition-duration: 300ms;
       z-index: 1;
+      cursor: pointer;
       &:hover{
         color:  #122542;
         transform: scale(0.9);
@@ -337,7 +378,7 @@ export default {
     }
 
     main{
-      padding: 130px 30% 0 10%;
+      padding: 130px 30% 60px 10%;
     }
 
     aside{

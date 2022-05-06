@@ -1,33 +1,40 @@
 <script>
 export default {
   name: 'PostUsers',
+  props: ['userId', 'pfp', 'pseudo', 'date', 'text', 'image' ],
   data() {
     return {
-      showComments: false
+      showComments: false,
+      userInfo: ''
     }
   },
+  beforeMount() {
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+  }
 }
 </script>
 
 <template>
   <div class="post">
     <div class="first-row">
-      <div class="user-post">
-        <img src="../assets/user.svg">
-        <div>
-          <h3 class="pseudo">John Doe</h3>
-          <p>15 Mars</p>
+      <router-link :to="{name: 'dashboard', params: { id: userId }}">
+        <div class="user-post">
+          <img v-if="pfp === null" src="../assets/user.svg">
+          <img v-else :src="pfp">
+          <div>
+            <h3 class="pseudo">{{pseudo}}</h3>
+            <p>{{date}}</p>
+          </div>
         </div>
-      </div>
-      <div>
-        <i class="fa-solid fa-pen-to-square"></i>
+      </router-link>
+      <div v-if="userId === userInfo[0]">
         <i class="fa-solid fa-trash-can"></i>
       </div>
     </div>
     <div class="text-post">
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.   
-      </p>
+      <p>{{text}}</p>
+      <span></span>
+      <img :src="image">
     </div>
     <div class="last-row">
       <div @click="showComments = !showComments" class="comments">
@@ -103,17 +110,17 @@ export default {
 
   .text-post{
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
     color: white;
     padding: 5px 0;
     font-size: 13px;
     line-height: 20px;
     border-bottom: 2px $light-blue solid;
     img{
-      margin: 10px 0;
-      max-width: 100%;
-      max-height: 500px;
+      margin: auto;
+      padding-top: 10px;
+      width: auto;
+      max-height: 400px;
     }
   }
 

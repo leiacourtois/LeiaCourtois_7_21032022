@@ -17,6 +17,12 @@ export default {
       passwordConfirmation: ''
     }
   },
+  beforeCreate(){
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    if(userInfo){
+      this.$router.push({path: '/activity'});
+    }
+  },
   methods: {
     pseudoInput() {
       let testVar = this.$store.state.regex.text.test(this.pseudo);

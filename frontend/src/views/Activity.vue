@@ -3,6 +3,7 @@ import HeaderNav from '../components/header.vue'
 import FooterText from '../components/footer.vue'
 import PostUsers from '../components/post.vue'
 import FormPost from '../components/form.vue'
+const axios = require('axios')
 export default {
   name: "ActivityView",
   components: {
@@ -10,7 +11,33 @@ export default {
     FooterText,
     PostUsers,
     FormPost
-  }
+  },
+  data(){
+    return {
+      posts: '',
+      userInfo: ''
+    }
+  },
+  beforeCreate(){
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    if(!userInfo){
+      this.$router.push({path: '/login'});
+    }
+  },
+  beforeMount() {
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    axios.get('http://localhost:3000/api/post/', {
+      headers:{
+          'Authorization' : `Token ${this.userInfo[1]}`
+      }
+    })
+    .then(response => {
+      this.posts = response.data
+    })
+    .catch(error => {
+      alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
+    });
+  },
 }
 </script>
 
@@ -19,7 +46,16 @@ export default {
     <HeaderNav />
     <main>
       <FormPost/>
-      <PostUsers/>
+      <PostUsers
+        v-for="post in posts"
+        :pfp="post.user.picture"
+        :pseudo="post.user.pseudo"
+        :image="post.image"
+        :text="post.text"
+        :date="post.date"
+        :userId="post.user.id"
+        :key="post.id"
+      />
     </main>
     <FooterText/>
   </div>

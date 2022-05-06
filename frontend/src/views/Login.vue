@@ -15,6 +15,12 @@ export default {
       password: '',
     }
   },
+  beforeCreate(){
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    if(userInfo){
+      this.$router.push({path: '/activity'});
+    }
+  },
   methods: {
     emailInput() {
       let testVar = this.$store.state.regex.email.test(this.email);
@@ -32,6 +38,7 @@ export default {
         }
         axios.post('http://localhost:3000/api/auth/login', user)
         .then(response =>{
+          console.log(response.data)
           let userArray = [response.data.id, response.data.token, response.data.pseudo, response.data.picture, response.data.role]
           sessionStorage.setItem('userInfo', JSON.stringify(userArray));
           this.$store.state.online = true

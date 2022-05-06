@@ -8,6 +8,12 @@ export default {
     HeaderNav,
     FooterText
   },
+  beforeCreate(){
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    if(!userInfo){
+      this.$router.push({path: '/login'});
+    }
+  }
 }
 </script>
 

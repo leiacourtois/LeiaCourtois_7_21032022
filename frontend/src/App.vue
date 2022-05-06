@@ -1,3 +1,14 @@
+<script>
+export default {
+  name: 'HeaderNav',
+  data() {
+    return {
+      userInfo: ''
+    }
+  },
+}
+</script>
+
 <template>
   <router-view/>
 </template>
