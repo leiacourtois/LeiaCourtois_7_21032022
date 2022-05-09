@@ -8,11 +8,21 @@ export default {
     HeaderNav,
     FooterText
   },
+  data(){
+    return {
+      userInfo: ''
+    }
+  },
   beforeCreate(){
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     if(!userInfo){
       this.$router.push({path: '/login'});
     }
+  },
+  beforeMount(){
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+  },
+  methods: {
   }
 }
 </script>
@@ -23,18 +33,25 @@ export default {
       <main>
         <div class="user-change">
           <div>
-            <img src="../assets/user.svg" class="user">
-            <i class="fa-regular fa-image"></i>
+            <label for="file" id="file-label">
+              <img v-if="userInfo[3] === null" src="../assets/user.svg" class="user">
+              <img v-else src="" class="user">
+              <i class="fa-regular fa-image"></i>
+            </label>
+            <input @change="imageInput" id="file" type="file">
           </div>
-          <h2>John Doe</h2>
+          <h2>{{userInfo[2]}}</h2>
         </div>
-        <form class="account">
+        <form>
           <h3>MON COMPTE</h3>
           <label for="username">Nom d'utilisateur</label>
           <input type="text" name="username">
 
-          <label for="username">Email</label>
+          <label for="email">Email</label>
           <input type="text" name="email">
+
+          <label for="bio">Bio</label>
+          <textarea name="bio" placeholder="Écrivez quelque chose à propos de vous"></textarea>
 
           <button type="submit">Enregistrer</button>
         </form>
@@ -68,9 +85,7 @@ export default {
 
   .user{
     width: 70px;
-    &:hover{
-      filter : brightness(150%);
-    }
+    transition-duration: 300ms;
   }
 
   form, .user-change{
@@ -91,9 +106,23 @@ export default {
       padding: 6px;
       background: #ffffff73;
       border-radius: 30px;
+      transition-duration: 300ms;
     }
   }
 
+  #file{
+    display: none;
+  }
+
+  #file-label{
+    cursor: pointer;
+    &:hover .user {
+      filter : brightness(150%);
+    }
+    &:hover i{
+      transform: scale(1.1);
+    }
+  }
 
   h2{
     font-weight: 100;
@@ -116,12 +145,19 @@ export default {
     font-size: 16px;
   }
 
-  input{
+  input, textarea{
     margin: 5px 0 25px 0;
     padding: 15px;
     font-size: 19px;
     border-radius: 13px;
     border: 3px $light-blue solid;
+  }
+
+  textarea{
+    max-width: 100%;
+    min-width: 100%;
+    max-height: 250px;
+    min-height: 63px;
   }
 
   button{
@@ -175,10 +211,6 @@ export default {
       width: 38%;
     }
 
-    .account{
-      max-height: 410px;
-    }
-
     h3{
       display: flex;
       justify-content: center;
@@ -191,7 +223,7 @@ export default {
       font-size: 20px;
     }
 
-    input{
+    input, textarea{
       font-size: 22px;
     }
 

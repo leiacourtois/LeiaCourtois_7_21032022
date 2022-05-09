@@ -1,21 +1,41 @@
 <script>
+const axios = require('axios')
 export default {
   name: 'PostUsers',
-  props: ['userId', 'pfp', 'pseudo', 'date', 'text', 'image' ],
+  props: ['userId', 'pfp', 'pseudo', 'date', 'text', 'image', 'id' ],
   data() {
     return {
       showComments: false,
-      userInfo: ''
+      userInfo: '',
+      showPost: true
     }
   },
   beforeMount() {
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+  },
+  methods: {
+    deletePost(post) {
+      let postTarget = post.target
+      let postDeleted = postTarget.closest('.post');
+      let id = postDeleted.dataset.id
+      axios.delete(`http://localhost:3000/api/post/${id}`, {
+        headers:{
+            'Authorization' : `Token ${this.userInfo[1]}`
+        }
+      })
+      .then(() => {
+        postDeleted.remove()
+      })
+      .catch(error => {
+        alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
+      });
+    }
   }
 }
 </script>
 
 <template>
-  <div class="post">
+  <div class="post" :data-id="id">
     <div class="first-row">
       <router-link :to="{name: 'dashboard', params: { id: userId }}">
         <div class="user-post">
@@ -28,7 +48,7 @@ export default {
         </div>
       </router-link>
       <div v-if="userId === userInfo[0]">
-        <i class="fa-solid fa-trash-can"></i>
+        <i class="fa-solid fa-trash-can" @click="deletePost"></i>
       </div>
     </div>
     <div class="text-post">

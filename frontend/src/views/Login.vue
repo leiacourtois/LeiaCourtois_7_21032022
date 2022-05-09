@@ -38,7 +38,6 @@ export default {
         }
         axios.post('http://localhost:3000/api/auth/login', user)
         .then(response =>{
-          console.log(response.data)
           let userArray = [response.data.id, response.data.token, response.data.pseudo, response.data.picture, response.data.role]
           sessionStorage.setItem('userInfo', JSON.stringify(userArray));
           this.$store.state.online = true

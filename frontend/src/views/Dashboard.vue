@@ -93,6 +93,7 @@ export default {
         :text="post.text"
         :date="post.date"
         :userId="user.id"
+        :id="post.id"
         :key="post.id"
       />
     </main>
