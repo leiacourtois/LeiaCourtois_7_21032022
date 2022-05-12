@@ -2,6 +2,7 @@ const rateLimit = require('express-rate-limit')
 const express = require('express');
 const postRoutes = require('./routes/post');
 const userRoutes = require('./routes/user');
+const paramsRoutes = require('./routes/params');
 const path = require('path');
 const db = require('./models');
 
@@ -30,5 +31,6 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/post', postRoutes);
+app.use('/api/params', paramsRoutes);
 app.use('/api/auth', limiterLogin, userRoutes);
 module.exports = app;

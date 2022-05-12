@@ -10,10 +10,8 @@ export default {
   beforeMount() {
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     if(this.userInfo){
-      console.log("connecté")
       this.online = true
     } else if (!this.userInfo){
-      console.log("non connecté")
       this.online = false
     }
     this.$store.state.online = this.online
@@ -57,7 +55,7 @@ export default {
         </div>
         <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}">
           <img v-if="userInfo[3] === null" src="../assets/user.svg" id="user-nav">
-          <img v-else src="" id="user-nav">
+          <img v-else :src="userInfo[3]" id="user-nav">
           <span class="log-on"></span>
         </router-link>
       </nav>
@@ -180,6 +178,9 @@ export default {
 
   #user-nav{
     width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 100px;
   }
 
   .log-on{
@@ -256,6 +257,7 @@ export default {
 
     #user-nav{
       width: 60px;
+      height: 60px;
     }
 
     .log-on{

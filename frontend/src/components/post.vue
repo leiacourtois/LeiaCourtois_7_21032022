@@ -111,12 +111,16 @@ export default {
   }
 
   .user-post{
+    text-decoration: none;
     display: flex;
-    width: 65%;
+    width: 100%;
     padding-bottom: 5px;
     border-bottom: 2px $pink-peach solid;
     img{
       width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 100px;
       &:hover{
         filter : brightness(150%);
       }
@@ -139,7 +143,7 @@ export default {
     img{
       margin: auto;
       padding-top: 10px;
-      width: auto;
+      max-width: 100%;
       max-height: 400px;
     }
   }
@@ -203,6 +207,7 @@ export default {
     .user-post{
       img{
         width: 55px;
+        height: 55px;
       }
       p{
         font-size: 12px;

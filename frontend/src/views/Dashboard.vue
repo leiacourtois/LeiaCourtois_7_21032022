@@ -65,8 +65,13 @@ export default {
       <nav>
         <i class="fa-solid fa-arrow-right-from-bracket" @click="logOut"></i>
         <router-link to="/params"><i class="fa-solid fa-screwdriver-wrench"></i></router-link>
+        <img v-if="userInfo[3] === null" src="../assets/user.svg">
+        <img v-else :src="userInfo[3]">
       </nav>
-      <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}"><img src="../assets/user.svg" id="user-nav"></router-link>
+      <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}">
+        <img v-if="user.picture === null" src="../assets/user.svg" id="user-nav"> 
+        <img v-else :src="user.picture" id="user-nav">
+      </router-link>
       <span class="log-on"></span>
     </header>
 
@@ -78,7 +83,7 @@ export default {
           <h2 v-else-if="user.roleId === 2">Admin</h2>
           <a :href="emailMailto"><p>{{user.email}}</p></a>
         </div>
-        <div class="bio">
+        <div v-if="user.bio != null" class="bio">
           <h3>Biographie</h3>
           <p>{{user.bio}}</p>
         </div>
@@ -171,31 +176,42 @@ export default {
         transform: scale(0.9);
       }
     }
+    img{
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 100px;
+      margin: 5px 0 0 28px;
+    }
   }
 
   #user-nav{
     box-sizing: content-box;
     position: absolute;
     width: 80px;
-    top: 20px;
+    height: 80px;
+    object-fit: cover;
+    top: 45px;
     left: 50%;
     transform: translate(-50%, 0%);
+    border-radius: 100px;
   }
 
   .log-on{
     position: absolute;
-    top: 81px;
-    left: 50%;
+    top: 115px;
+    left: 51%;
     transform: translate(-50%, 0%);
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     margin-left: 24px;
     background: #2de500;
     border-radius: 20px;
+    border: 4px solid $dark-grey;
   }
 
   main{
-    padding: 30px 15px;
+    padding: 60px 15px;
   }
 
   /*info user*/
@@ -255,87 +271,6 @@ export default {
     }
   }
 
-  /*post Form*/
-
-  form{
-    width: 100%;
-    background: #272727;
-    border-radius: 15px;
-  }
-
-  .user{
-    display: flex;
-    padding: 3px 5px;
-    img{
-      width: 35px;
-      &:hover{
-        filter : brightness(150%);
-      }
-    }
-  }
-
-  .pseudo{
-    font-weight: 100;
-    color: #d1515a;
-    margin: 7px 0 0 5px;
-  }
-
-  textarea{
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
-    height: 80px;
-    min-height: 50px;
-    padding: 8px;
-    color: #d1515a;
-    background: #412d2f;
-    border: none;
-    border-top: 1px #121212 solid;
-    border-bottom: 1px #121212 solid;
-  }
-
-  .photo-button{
-    display: flex;
-    justify-content: space-between;
-    padding: 8px;
-    div{
-      display: flex;
-      padding: 5px;
-      border-radius: 5px;
-      transition-duration: 300ms;
-      &:hover{
-        background: rgba(0, 0, 0, 0.2);
-        transform: scale(1.05);
-      }
-    }
-    p{
-      color: #325c9b;
-      font-size: 12px;
-      margin: 3px 0 0 5px;
-    }
-    i{
-      color: #d1515a;
-      font-size: 20px;
-    }
-  }
-
-  button{
-    background: #d1515a;
-    border: none;
-    padding: 3px 20px;
-    color: white;
-    font-weight: bold;
-    border-radius: 20px;
-    transform: scale(1.0);
-    transition-duration: 300ms;
-    z-index: 1;
-    &:hover{
-      transform: scale(1.05);
-      background: white;
-      color: #d1515a;
-    }
-  }
-
   @media screen and (min-width: 1025px) {
     header{
       position: fixed;
@@ -368,14 +303,17 @@ export default {
 
     #user-nav{
       width: 100px;
+      height: 100px;
+      border: 5px solid $dark-grey;
     }
 
     .log-on{
-      top: 94px;
+      top: 130px;
+      left: 50.3%;
       margin-left: 28px;
-      height: 19px;
-      width: 19px;
-      border-width: 6px;
+      height: 25px;
+      width: 25px;
+      border-width: 5px;
     }
 
     main{
@@ -420,39 +358,6 @@ export default {
       h3{
         font-size: 20px;
       }
-    }
-
-    textarea{
-      padding: 12px;
-    }
-
-    .user{
-      padding: 6px 10px;
-    }
-
-    .photo-button{
-      padding: 12px;
-      i{
-        font-size: 30px;
-      }
-      p{
-        font-size: 15px;
-        margin-top: 6px;
-      }
-    }
-
-    button{
-      padding: 7px 37px;
-      font-size: 16px;
-    }
-
-    .user img{
-      width: 47px;
-    }
-
-    .pseudo{
-      font-size: 22px;
-      margin-top: 10px;
     }
   }
 </style>
