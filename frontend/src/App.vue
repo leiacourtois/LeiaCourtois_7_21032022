@@ -19,6 +19,7 @@ export default {
     padding: 0;
     font-family: Arial;
     box-sizing: border-box;
+    text-decoration: none;
   }
 
   body{

@@ -214,7 +214,7 @@ export default {
     padding: 5px;
     border-radius: 5px;
     transition-duration: 300ms;
-    width: 20%;
+    width: 140px;
     &:hover{
       background: rgba(0, 0, 0, 0.2);
       transform: scale(1.05);
@@ -285,6 +285,7 @@ export default {
     .photo-input{
       padding: 7px;
       margin: 3px;
+      width: 180px;
       i{
         font-size: 30px;
       }

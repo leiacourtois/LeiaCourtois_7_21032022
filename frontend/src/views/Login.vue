@@ -36,7 +36,11 @@ export default {
           email : this.email,
           password : this.password,
         }
-        axios.post('http://localhost:3000/api/auth/login', user)
+        axios.post('http://localhost:3000/api/auth/login', user, {
+          headers:{
+              'Content-Type': 'application/json'
+          }
+        })
         .then(response =>{
           let userArray = [response.data.id, response.data.token, response.data.pseudo, response.data.picture, response.data.role]
           sessionStorage.setItem('userInfo', JSON.stringify(userArray));

@@ -13,6 +13,9 @@ export default {
   beforeMount() {
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
   },
+  mounted(){
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+  },
   methods: {
     deletePost(post) {
       let postTarget = post.target
@@ -72,6 +75,11 @@ export default {
         <p>Ullamcorper velit sed ullamcorper morbi tincidunt ornare massa eget. Egestas erat imperdiet sed euismod nisi. Molestie at elementum eu facilisis sed. Sapien et ligula ullamcorper malesuada. Tortor at auctor urna nunc id cursus metus. </p>
       </div>
     </div>
+    <div class="add-comment">
+      <img v-if="userInfo[3] === null" src="../assets/user.svg">
+      <img v-else :src="userInfo[3]">
+      <input @keyup.enter="sendComment" type="text" name="username" placeholder="Écrivez un commentaire" />
+    </div>
   </div>
 </template>
 
@@ -79,6 +87,7 @@ export default {
   $pink-peach : #d1515a; 
   $light-blue : #325c9b;
   $grey : #272727;
+  $dark-grey : #121212;
 
   .pseudo{
     font-weight: 100;
@@ -182,7 +191,7 @@ export default {
     padding: 7px 0;
     div{
       display: flex ;
-      background: rgba($light-blue, 0.4);
+      background: rgba($dark-grey, 0.4);
       margin: 7px 0;
       padding: 10px;
       border-radius: 10px;
@@ -195,6 +204,32 @@ export default {
     p{
       color: white;
       font-size: 13px;
+    }
+  }
+
+  .add-comment{
+    border-top: 2px $light-blue solid;
+    padding: 7px 0;
+    display: flex;
+    justify-content: space-between;
+    img{
+      width: 30px;
+      height: 30px;
+      object-fit: cover;
+      border-radius: 100px;
+    }
+    input{
+      width: 100%;
+      border-radius: 100px;
+      border: none;
+      color: white;
+      margin-left: 7px;
+      padding: 10px;
+      font-size: 14px;
+      background: rgba($dark-grey, 0.4);
+      &::placeholder{
+        color: $pink-peach;        
+      }
     }
   }
 
@@ -237,12 +272,23 @@ export default {
     }
 
     .comments-section{
-    h4{
-      font-size: 19px;
+      h4{
+        font-size: 19px;
+      }
+      p{
+        font-size: 17px;
+      }
     }
-    p{
-      font-size: 17px;
+
+    .add-comment{
+      input{
+        font-size: 17px;
+        padding: 12px;
+      }
+      img{
+        width: 40px;
+        height: 40px;
+      }
     }
-  }
   }
 </style>

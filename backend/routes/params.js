@@ -8,6 +8,7 @@ const paramsCtrl = require('../controllers/params');
 
 router.get('/:id', auth, paramsCtrl.getParams);
 router.put('/:id', auth, multer, paramsCtrl.modifyUserParams);
-//router.delete('/:id', auth, paramsCtrl.deleteUser);
+router.put('/password/:id', auth, paramsCtrl.modifyPasswordParams);
+router.delete('/:id', auth, paramsCtrl.deleteUser);
 
 module.exports = router;

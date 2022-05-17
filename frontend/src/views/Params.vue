@@ -112,14 +112,14 @@ export default {
         this.sendVar = false
       }
     },
-    /*passwordInput() {
+    passwordInput() {
       let testVar = this.$store.state.regex.password.test(this.pw);
       if(testVar === true){
         this.sendVar = true
       } else{
         this.sendVar = false
       }
-    },*/
+    },
     sendUserParams() {
       if(this.sendVar === true || this.curFiles){
         let formData = new FormData()
@@ -155,6 +155,47 @@ export default {
       } else{
         alert('Vous ne pouvez pas sauver ces parametres')
       }
+    },
+    sendPasswordParams() {
+      if(this.sendVar === true){
+        if(this.pw === this.pwConfirmation){
+          let password = {
+            oldpassword : this.oldpw,
+            newpassword : this.pw,
+          }
+          console.log(password)
+          axios.put(`http://localhost:3000/api/params/password/${this.user.id}`, password, {
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization' : `Token ${this.userInfo[1]}`
+            }
+          })
+          .then(() => {
+            this.$router.push({path: '/activity'});
+          })
+          .catch(error => {
+            alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
+          });
+        } else{
+          alert('Mot-de-passe invalide')
+        }
+      } else{
+        alert('Vous ne pouvez pas sauver ces parametres')
+      }
+    },
+    deleteUser() {
+      axios.delete(`http://localhost:3000/api/params/${this.user.id}`, {
+        headers:{
+            'Authorization' : `Token ${this.userInfo[1]}`
+        }
+      })
+      .then(() => {
+        sessionStorage.removeItem('userInfo');
+        this.$router.push({path: '/signup'});
+      })
+      .catch(error => {
+        alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
+      });
     }
   }
 }
@@ -185,24 +226,24 @@ export default {
             <label for="bio">Bio</label>
             <textarea @change="bioInput" name="bio" placeholder="Écrivez quelque chose à propos de vous" v-model="user.bio"></textarea>
           </div>
-          <button @click="sendUserParams" id="save" type="button">Enregistrer</button>
+          <button @click="sendUserParams" class="save" type="button">Enregistrer</button>
         </form>
         <div class="section-right">
           <form id="pw">
             <h3>MOT DE PASSE</h3>
             <div class="params">
               <label for="old-passeword">Ancien mot-de-passe</label>
-              <input type="text" name="old-passeword" v-model="oldpw">
+              <input type="password" name="old-passeword" v-model="oldpw">
 
               <label for="new-password">Nouveau mot-de-passe</label>
-              <input type="text" name="new-password" v-model="pw">
+              <input @change="passwordInput" type="password" name="new-password" v-model="pw">
 
               <label for="new-password-confirmation">Confirmation du nouveau mot-de-passe</label>
-              <input type="text" name="new-password-confirmation" v-model="pwConfirmation">
+              <input type="password" name="new-password-confirmation" v-model="pwConfirmation">
             </div>
-            <button id="save" type="button">Enregistrer</button>
+            <button @click="sendPasswordParams" class="save" type="button">Enregistrer</button>
           </form>
-          <button id="delete" type="submit">Supprimer l'utilisateur</button>
+          <button @click="deleteUser" id="delete" type="submit">Supprimer l'utilisateur</button>
         </div>
       </main>
     <FooterText/>
@@ -329,7 +370,7 @@ export default {
     }
   }
 
-  #save{
+  .save{
     color: white;
     background: $light-blue;
   }
