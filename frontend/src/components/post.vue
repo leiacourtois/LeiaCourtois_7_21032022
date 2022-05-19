@@ -2,12 +2,15 @@
 const axios = require('axios')
 export default {
   name: 'PostUsers',
-  props: ['userId', 'pfp', 'pseudo', 'date', 'text', 'image', 'id' ],
+  props: ['userId', 'pfp', 'pseudo', 'date', 'text', 'image', 'id', 'comments', 'commentsNb' ],
   data() {
     return {
       showComments: false,
       userInfo: '',
-      showPost: true
+      showPost: true,
+      comment: '',
+      commentPosted: false,
+      newComment: ''
     }
   },
   beforeMount() {
@@ -28,6 +31,47 @@ export default {
       })
       .then(() => {
         postDeleted.remove()
+      })
+      .catch(error => {
+        alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
+      });
+    },
+    sendComment() {
+      console.log(this.userInfo[0])
+
+      let comment = {
+        text : this.comment,
+        userId : this.userInfo[0],
+        postId : this.id
+      }
+
+      axios.post('http://localhost:3000/api/comment/', comment, {
+        headers:{
+            'Content-Type': 'application/json',
+            'Authorization' : `Token ${this.userInfo[1]}`
+        }
+      })
+      .then( response  => {
+        this.comment = ''
+        this.newComment = response.data.data
+        this.commentPosted = true
+      })
+      .catch(error => {
+        alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
+      });
+    },
+    deleteComment(comment) {
+      console.log(comment)
+      let commentTarget = comment.target
+      let commentDeleted = commentTarget.closest('.comment');
+      let id = commentDeleted.dataset.id
+      axios.delete(`http://localhost:3000/api/comment/${id}`, {
+        headers:{
+            'Authorization' : `Token ${this.userInfo[1]}`
+        }
+      })
+      .then(() => {
+        commentDeleted.remove()
       })
       .catch(error => {
         alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
@@ -59,26 +103,35 @@ export default {
       <span></span>
       <img :src="image">
     </div>
-    <div class="last-row">
+    <div v-if="commentsNb > 0" class="last-row">
       <div @click="showComments = !showComments" class="comments">
         <i class="fa-solid fa-comments"></i>
-        <p> 7 comentaires</p>
+        <p v-if="commentsNb > 1" >{{commentsNb}} comentaires</p>
+        <p v-else >{{commentsNb}} comentaire</p>
       </div>
     </div>
     <div v-show="showComments" class="comments-section">
-      <div>
-        <h4>Jane Nada</h4>
-        <p>Super Cool !</p>
+      <div v-if="commentPosted === true" :data-id="newComment.id" class="comment">
+        <img v-if="userInfo[3] === null" src="../assets/user.svg">
+        <img v-else :src="userInfo[3]">
+        <div>
+          <span><h4>{{userInfo[2]}}</h4> <p>{{newComment.date}}</p></span>
+          <p>{{newComment.text}}</p>
+        </div>
       </div>
-      <div>
-        <h4>Jean Dupont</h4>
-        <p>Ullamcorper velit sed ullamcorper morbi tincidunt ornare massa eget. Egestas erat imperdiet sed euismod nisi. Molestie at elementum eu facilisis sed. Sapien et ligula ullamcorper malesuada. Tortor at auctor urna nunc id cursus metus. </p>
+      <div v-for="comment in comments" :key="comment.id" :data-id="comment.id" class="comment">
+        <img v-if="comment.user.picture === null" src="../assets/user.svg">
+        <img v-else :src="comment.user.picture">
+        <div>
+          <span><h4>{{comment.user.pseudo}}</h4> <p>{{comment.date}}</p> <i class="fa-solid fa-trash-can" @click="deleteComment"></i></span>
+          <p>{{comment.text}}</p>
+        </div>
       </div>
     </div>
     <div class="add-comment">
       <img v-if="userInfo[3] === null" src="../assets/user.svg">
       <img v-else :src="userInfo[3]">
-      <input @keyup.enter="sendComment" type="text" name="username" placeholder="Écrivez un commentaire" />
+      <input @keyup.enter="sendComment"  v-model="comment" type="text" name="username" placeholder="Écrivez un commentaire" />
     </div>
   </div>
 </template>
@@ -108,7 +161,7 @@ export default {
     justify-content: space-between;
     i{
       color: $light-blue;
-      font-size: 15px;
+      font-size: 20px;
       padding: 10px 5px;
       transition-duration: 300ms;
       z-index: 1;
@@ -159,7 +212,7 @@ export default {
 
   .last-row{
     display: flex;
-    padding: 5px 5px 0 5px;
+    padding: 5px 5px 5px 5px;
   }
 
   .comments{
@@ -185,25 +238,57 @@ export default {
     }
   }
 
+  /*comments*/
+
   .comments-section{
     border-top: 2px $light-blue solid;
-    margin-top: 5px;
     padding: 7px 0;
+  }
+
+  .comment{
+    display: flex ;
     div{
-      display: flex ;
       background: rgba($dark-grey, 0.4);
-      margin: 7px 0;
+      margin-bottom: 7px;
       padding: 10px;
       border-radius: 10px;
+      width: 100%;
     }
     h4{
       color: $pink-peach;
-      margin-right: 20px;
+      margin-right: 5px;
       font-size: 14px;
     }
     p{
       color: white;
       font-size: 13px;
+    }
+    img{
+      width: 30px;
+      height: 30px;
+      object-fit: cover;
+      border-radius: 100px;
+      margin-right: 5px;
+    }
+    span{
+      display: flex;
+      position: relative;
+      p{
+        font-size: 10px;
+        margin-top: 2px;
+        color: grey;
+      }
+      i{
+        color: $light-blue;
+        position: absolute;
+        font-size: 15px;
+        right: 0px;
+        transition-duration: 300ms;
+        &:hover{
+          color: $pink-peach;
+          transform: scale(0.9);
+        }
+      }
     }
   }
 
@@ -249,10 +334,6 @@ export default {
       }
     }
 
-    .first-row i{
-      font-size: 20px;
-    }
-
     .post{
       padding: 8px 12px;
     }
@@ -271,12 +352,21 @@ export default {
       }
     }
 
-    .comments-section{
+    .comment{
       h4{
         font-size: 19px;
       }
       p{
         font-size: 17px;
+      }
+      img{
+        width: 40px;
+        height: 40px;
+      }
+      span{
+        p{
+          margin-top: 5px;
+        }
       }
     }
 

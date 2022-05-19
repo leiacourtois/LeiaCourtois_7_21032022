@@ -3,6 +3,10 @@ module.exports = (sequelize, Sequelize) => {
     text: {
       type: Sequelize.TEXT('tiny'),
       allowNull: false
+    },
+    date: {
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.NOW 
     }
   }, 
   {

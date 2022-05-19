@@ -34,8 +34,16 @@ export default {
       }
     })
     .then(response => {
+      console.log(response)
       this.posts = response.data.posts
       this.user = response.data
+      this.posts.forEach(post => {
+        let commentsCount = 0
+        post.comments.forEach(() =>{
+          commentsCount ++
+        });
+        post.commentsNb = commentsCount
+      });
     })
     .catch(error => {
       alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
@@ -65,10 +73,12 @@ export default {
       <nav>
         <i class="fa-solid fa-arrow-right-from-bracket" @click="logOut"></i>
         <router-link to="/params"><i class="fa-solid fa-screwdriver-wrench"></i></router-link>
-        <img v-if="userInfo[3] === null" src="../assets/user.svg">
-        <img v-else :src="userInfo[3]">
+        <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}">
+          <img v-if="userInfo[3] === null" src="../assets/user.svg">
+          <img v-else :src="userInfo[3]">
+        </router-link>
       </nav>
-      <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}">
+      <router-link :to="{name: 'dashboard', params: { id: userBoardId }}">
         <img v-if="user.picture === null" src="../assets/user.svg" id="user-nav"> 
         <img v-else :src="user.picture" id="user-nav">
       </router-link>
@@ -99,6 +109,8 @@ export default {
         :date="post.date"
         :userId="user.id"
         :id="post.id"
+        :comments="post.comments"
+        :commentsNb="post.commentsNb"
         :key="post.id"
       />
     </main>
@@ -317,7 +329,7 @@ export default {
     }
 
     main{
-      padding: 130px 30% 60px 10%;
+      padding: 170px 30% 60px 10%;
     }
 
     aside{

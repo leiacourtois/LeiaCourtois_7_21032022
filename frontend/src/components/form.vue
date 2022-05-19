@@ -241,11 +241,11 @@ export default {
     display: flex;
     p{
       color: white;
-      font-size: 10px;
+      font-size: 8px;
       padding-left: 5px;
     }
     img{
-      width: 200px;
+      width: 100px;
     }
   }
 
@@ -303,6 +303,15 @@ export default {
     .pseudo{
       font-size: 22px;
       margin-top: 10px;
+    }
+
+    .preview{
+      p{
+        font-size: 10px;
+      }
+      img{
+        width: 200px;
+      }
     }
   }
 </style>

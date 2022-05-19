@@ -3,9 +3,9 @@ const xss = require("xss");
 const db = require("../models");
 const Post = db.post;
 const User = db.user;
+const Comment = db.comment;
 
 exports.createPost = (req, res, next) => {
-  //Init info
   const postObject = JSON.parse(req.body.post);
 
   const post = {
@@ -17,7 +17,6 @@ exports.createPost = (req, res, next) => {
   if (req.file) {
     post.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   }
-  //create new post
   Post.create(post)
     .then(data => {
       res.status(201).json({ data });    
@@ -27,8 +26,18 @@ exports.createPost = (req, res, next) => {
 
 exports.getAllPosts = (req, res, next) => {
   Post.findAll({
-    include: ["user"],
-    order: [['date', 'DESC']]
+    include: [
+      {
+        model : Comment,
+        as: 'comments',
+        include: ['user']
+      }, 
+      "user"
+    ],
+    order: [
+      ['date', 'DESC'],
+      ['comments', 'date', 'DESC']
+    ]
   }).then(
     (posts) => {
       res.status(200).json(posts);
@@ -49,6 +58,13 @@ exports.getAllUserPosts = (req, res, next) => {
       { 
         model : Post,
         as: 'posts',
+        include: [
+          {
+            model : Comment,
+            as: 'comments',
+            include: ['user']
+          }
+        ]
       },
     ],
     order: [

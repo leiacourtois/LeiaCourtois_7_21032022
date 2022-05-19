@@ -25,6 +25,10 @@ export default {
     }
   },
   beforeMount() {
+    const moment = require('moment');
+    moment().format();
+    moment.locale('fr');
+
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     axios.get('http://localhost:3000/api/post/', {
       headers:{
@@ -33,6 +37,15 @@ export default {
     })
     .then(response => {
       this.posts = response.data
+      this.posts.forEach(post => {
+        post.date = moment(post.date).format('DD/MM/YY à HH:mm')
+        let commentsCount = 0
+        post.comments.forEach(comment =>{
+          comment.date = moment(comment.date).format('DD/MM/YY à HH:mm')
+          commentsCount ++
+        });
+        post.commentsNb = commentsCount
+      });
     })
     .catch(error => {
       alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
@@ -55,6 +68,8 @@ export default {
         :date="post.date"
         :userId="post.user.id"
         :id="post.id"
+        :comments="post.comments"
+        :commentsNb="post.commentsNb"
         :key="post.id"
       />
     </main>

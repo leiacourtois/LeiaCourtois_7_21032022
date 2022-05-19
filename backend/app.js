@@ -3,6 +3,7 @@ const express = require('express');
 const postRoutes = require('./routes/post');
 const userRoutes = require('./routes/user');
 const paramsRoutes = require('./routes/params');
+const commentRoutes = require('./routes/comment');
 const path = require('path');
 const db = require('./models');
 
@@ -11,7 +12,7 @@ const limiterLogin = rateLimit({
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
-})
+}) 
 
 /*db.sequelize.sync({ force: true }).then(() => {
   db.role.create({ name : "employé" })
@@ -32,5 +33,6 @@ app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/post', postRoutes);
 app.use('/api/params', paramsRoutes);
+app.use('/api/comment', commentRoutes);
 app.use('/api/auth', limiterLogin, userRoutes);
 module.exports = app;
