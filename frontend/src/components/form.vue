@@ -16,6 +16,7 @@ export default {
       curFiles: '',
       paraContent: '',
       posted: false,
+      newPosts: []
     }
   },
   beforeMount() {
@@ -76,6 +77,10 @@ export default {
       }
     },
     sendPost(){
+      const moment = require('moment');
+      moment().format();
+      moment.locale('fr');
+
       if(this.sendVar === true){
         let formData = new FormData()
         let image = this.curFiles[0]
@@ -97,14 +102,17 @@ export default {
           }
         })
         .then( response  => {
-          this.post = response.data.data
+         
           this.curFiles = '';
           this.imageSrc = '';
           this.paraContent = '';
           this.text = '';
 
           this.posted = true
-
+          let newPost = response.data.data
+          newPost.date = moment(newPost.date).format('DD/MM/YY à HH:mm')
+          this.newPosts.push(newPost);
+        
         })
         .catch(error => {
           alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
@@ -143,16 +151,19 @@ export default {
         <button @click="sendPost" type="reset">Publier</button>
       </div>
     </form>
-    <PostUsers 
-        v-if="posted === true"
+    <div v-if="posted === true">
+      <PostUsers
+        v-for="post in newPosts"
         :pfp="userInfo[3]"
         :pseudo="userInfo[2]"
-        :date="post.date"
         :image="post.image"
         :text="post.text"
+        :date="post.date"
         :userId="userInfo[0]"
         :id="post.id"
-        :key="post.id"/>
+        :key="post.id"
+      />
+    </div>
   </div>
 </template>
 

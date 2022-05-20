@@ -4,6 +4,8 @@ const db = require("../models");
 const Post = db.post;
 const User = db.user;
 const Comment = db.comment;
+require('dotenv').config()
+const jwt = require('jsonwebtoken');
 
 exports.createPost = (req, res, next) => {
   const postObject = JSON.parse(req.body.post);
@@ -85,19 +87,27 @@ exports.getAllUserPosts = (req, res, next) => {
 };
 
 exports.deletePost = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+  const userId = decodedToken.id;
+  const userRole = decodedToken.role;
   Post.findByPk(req.params.id)
     .then(post => {
-      if(post.image){
-        const filename = post.image.split('/images/')[1];
-        fs.unlink(`images/${filename}`, () => {
+      if (userId == post.userId || userRole == 2) {
+        if(post.image){
+          const filename = post.image.split('/images/')[1];
+          fs.unlink(`images/${filename}`, () => {
+            Post.destroy({ where: { id: req.params.id } })
+              .then(() => res.status(200).json({ message: 'deleted object'}))
+              .catch(error => res.status(400).json({ error }));
+          });
+        } else{
           Post.destroy({ where: { id: req.params.id } })
-            .then(() => res.status(200).json({ message: 'deleted object'}))
-            .catch(error => res.status(400).json({ error }));
-        });
+              .then(() => res.status(200).json({ message: 'deleted object'}))
+              .catch(error => res.status(400).json({ error }));
+        }
       } else{
-        Post.destroy({ where: { id: req.params.id } })
-            .then(() => res.status(200).json({ message: 'deleted object'}))
-            .catch(error => res.status(400).json({ error }));
+        return res.status(401).json({ error: 'Unauthorized' });
       }
     })
     .catch(error => res.status(500).json({ error }));

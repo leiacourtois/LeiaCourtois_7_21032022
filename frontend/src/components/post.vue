@@ -10,7 +10,7 @@ export default {
       showPost: true,
       comment: '',
       commentPosted: false,
-      newComment: ''
+      newComments: []
     }
   },
   beforeMount() {
@@ -37,7 +37,9 @@ export default {
       });
     },
     sendComment() {
-      console.log(this.userInfo[0])
+      const moment = require('moment');
+      moment().format();
+      moment.locale('fr');
 
       let comment = {
         text : this.comment,
@@ -53,15 +55,18 @@ export default {
       })
       .then( response  => {
         this.comment = ''
-        this.newComment = response.data.data
         this.commentPosted = true
+        let newComment = response.data.data
+        newComment.date = moment(newComment.date).format('DD/MM/YY à HH:mm')
+        this.newComments.push(newComment);
+      
+        this.showComments = true
       })
       .catch(error => {
         alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
       });
     },
     deleteComment(comment) {
-      console.log(comment)
       let commentTarget = comment.target
       let commentDeleted = commentTarget.closest('.comment');
       let id = commentDeleted.dataset.id
@@ -94,7 +99,7 @@ export default {
           </div>
         </div>
       </router-link>
-      <div v-if="userId === userInfo[0]">
+      <div v-if="userId === userInfo[0] || userInfo[4] === 2">
         <i class="fa-solid fa-trash-can" @click="deletePost"></i>
       </div>
     </div>
@@ -103,7 +108,7 @@ export default {
       <span></span>
       <img :src="image">
     </div>
-    <div v-if="commentsNb > 0" class="last-row">
+    <div class="last-row">
       <div @click="showComments = !showComments" class="comments">
         <i class="fa-solid fa-comments"></i>
         <p v-if="commentsNb > 1" >{{commentsNb}} comentaires</p>
@@ -111,22 +116,27 @@ export default {
       </div>
     </div>
     <div v-show="showComments" class="comments-section">
-      <div v-if="commentPosted === true" :data-id="newComment.id" class="comment">
-        <img v-if="userInfo[3] === null" src="../assets/user.svg">
-        <img v-else :src="userInfo[3]">
-        <div>
-          <span><h4>{{userInfo[2]}}</h4> <p>{{newComment.date}}</p></span>
-          <p>{{newComment.text}}</p>
+
+      <aside v-if="commentPosted === true">
+        <div v-for="newComment in newComments" :key="newComment.id" :data-id="newComment.id" class="comment">
+          <img v-if="userInfo[3] === null" src="../assets/user.svg">
+          <img v-else :src="userInfo[3]">
+          <div>
+            <span><h4>{{userInfo[2]}}</h4> <p>{{newComment.date}}</p> <i class="fa-solid fa-trash-can" @click="deleteComment"></i></span>
+            <p>{{newComment.text}}</p>
+          </div>
         </div>
-      </div>
+      </aside>
+
       <div v-for="comment in comments" :key="comment.id" :data-id="comment.id" class="comment">
         <img v-if="comment.user.picture === null" src="../assets/user.svg">
         <img v-else :src="comment.user.picture">
         <div>
-          <span><h4>{{comment.user.pseudo}}</h4> <p>{{comment.date}}</p> <i class="fa-solid fa-trash-can" @click="deleteComment"></i></span>
+          <span><h4>{{comment.user.pseudo}}</h4> <p>{{comment.date}}</p> <i v-if="comment.user.id === userInfo[0] || userInfo[4] === 2" class="fa-solid fa-trash-can" @click="deleteComment"></i></span>
           <p>{{comment.text}}</p>
         </div>
       </div>
+
     </div>
     <div class="add-comment">
       <img v-if="userInfo[3] === null" src="../assets/user.svg">

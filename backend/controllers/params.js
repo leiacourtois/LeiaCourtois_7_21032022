@@ -33,6 +33,9 @@ exports.getParams = (req, res, next) => {
 
 exports.modifyUserParams = (req, res, next) => {
   const paramsObject = JSON.parse(req.body.newUser);
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+  const userId = decodedToken.id;
 
   const params = {
     pseudo: xss(paramsObject.pseudo),
@@ -50,7 +53,7 @@ exports.modifyUserParams = (req, res, next) => {
       } else{
         params.picture = user.picture
       }
-      if(user.id == params.id){
+      if(user.id == params.id && user.id == userId){
         if(user.picture != null){
           const filename = user.picture.split('/images/')[1];
           fs.unlink(`images/${filename}`, () => {
@@ -71,6 +74,10 @@ exports.modifyUserParams = (req, res, next) => {
 };
 
 exports.modifyPasswordParams = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+  const userId = decodedToken.id;
+
   User.findByPk(req.params.id)
   .then(user => {
     bcrypt.compare(req.body.oldpassword, user.password)
@@ -85,9 +92,13 @@ exports.modifyPasswordParams = (req, res, next) => {
           let params = {
             password : newpassword
           }
-          User.update(params, { where: { id: req.params.id } })
-          .then(() => res.status(200).json({ message: 'settings changed'}))
-          .catch(error => res.status(400).json({ error }));
+          if (userId == user.id) {
+            User.update(params, { where: { id: req.params.id } })
+            .then(() => res.status(200).json({ message: 'settings changed'}))
+            .catch(error => res.status(400).json({ error }));
+          } else{
+            return res.status(401).json({ error: 'Unauthorized' });
+          }
         })
         .catch(error => res.status(500).json({ error }));
       } else{
@@ -101,41 +112,65 @@ exports.modifyPasswordParams = (req, res, next) => {
 };
 
 exports.deleteUser = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+  const userId = decodedToken.id;
+  const userRole = decodedToken.role;
+
   Post.findAll({ where: { userId: req.params.id } })
     .then(posts => {
       posts.forEach(post => {
-        if(post.image){
-          const filename = post.image.split('/images/')[1];
-          fs.unlink(`images/${filename}`, () => {
+        if (userId == post.userId || userRole == 2) {
+          if(post.image){
+            const filename = post.image.split('/images/')[1];
+            fs.unlink(`images/${filename}`, () => {
+              Post.destroy({ where: { userId: req.params.id } })
+                .catch(error => res.status(400).json({ error }));
+            });
+          } else{
             Post.destroy({ where: { userId: req.params.id } })
-              .then(() => res.status(200).json({ message: 'deleted object'}))
-              .catch(error => res.status(400).json({ error }));
-          });
+                .catch(error => res.status(400).json({ error }));
+          }
         } else{
-          Post.destroy({ where: { userId: req.params.id } })
-              .then(() => res.status(200).json({ message: 'deleted object'}))
-              .catch(error => res.status(400).json({ error }));
+          return res.status(401).json({ error: 'Unauthorized' });
         }
       });
-    })
-    .catch(error => res.status(500).json({ error }));
 
-  User.findByPk(req.params.id)
-    .then(user => {
-      if(user.picture){
-        const filename = user.picture.split('/images/')[1];
-        fs.unlink(`images/${filename}`, () => {
-          User.destroy({ where: { id: req.params.id } })
-            .then(() => res.status(200).json({ message: 'deleted user'}))
-            .catch(error => res.status(400).json({ error }));
-        });
-      } else{
-        User.destroy({ where: { id: req.params.id } })
-            .then(() => res.status(200).json({ message: 'deleted user'}))
-            .catch(error => res.status(400).json({ error }));
-      }
+      User.findByPk(req.params.id)
+      .then(user => {
+        if (userId == user.id || userRole == 2) {
+          if(user.picture){
+            const filename = user.picture.split('/images/')[1];
+            fs.unlink(`images/${filename}`, () => {
+              User.destroy({ where: { id: req.params.id } })
+                .then(() => res.status(200).json({ message: 'deleted user'}))
+                .catch(error => res.status(400).json({ error }));
+            });
+          } else{
+            User.destroy({ where: { id: req.params.id } })
+                .then(() => res.status(200).json({ message: 'deleted user'}))
+                .catch(error => res.status(400).json({ error }));
+          }
+        } else{
+          return res.status(401).json({ error: 'Unauthorized' });
+        }
+      })
+      .catch(error => res.status(500).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
 
 };
 
+exports.getAllUsers = (req, res, next) => { 
+  User.findAll()
+  .then((users) => {
+    res.status(200).json(users);
+  })
+  .catch(
+    (error) => {
+      res.status(400).json({
+        error: error
+      });
+    }
+  );
+}

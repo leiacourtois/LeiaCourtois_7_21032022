@@ -1,17 +1,60 @@
 <script>
 import HeaderNav from '../components/header.vue'
 import FooterText from '../components/footer.vue'
-
+const axios = require('axios')
 export default {
   name: "UsersList",
   components: {
     HeaderNav,
     FooterText
   },
-  beforeCreate(){
+  data() {
+    return {
+      users: '',
+      userInfo: ''
+    }
+  },
+  beforeCreate() {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     if(!userInfo){
       this.$router.push({path: '/login'});
+    }
+  },
+  beforeMount() {
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    axios.get('http://localhost:3000/api/params/', {
+      headers:{
+          'Authorization' : `Token ${this.userInfo[1]}`
+      }
+    })
+    .then(response => {
+      this.users = response.data
+    })
+    .catch(error => {
+      alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
+    });
+  },
+  methods: {
+    deleteUser(user) {
+      let userTarget = user.target
+      let userDeleted = userTarget.closest('tr');
+      let id = userDeleted.dataset.id
+      axios.delete(`http://localhost:3000/api/params/${id}`, {
+        headers:{
+            'Authorization' : `Token ${this.userInfo[1]}`
+        }
+      })
+      .then(() => {
+        if(id == this.userInfo[0]) {
+          sessionStorage.removeItem('userInfo');
+          this.$router.push({path: '/signup'});
+        } else{
+          userDeleted.remove()
+        }
+      })
+      .catch(error => {
+        alert(`Quelque chose s'est mal passé. Essayez à nouveau! ${error}`)
+      });
     }
   }
 }
@@ -30,12 +73,25 @@ export default {
               <th>Rôle</th>
               <th class="last-col"></th>
             </tr>
-            <tr>
-              <td class="image"><img src="../assets/user.svg"></td>
-              <td class="username">John Doe</td>
-              <td class="email"><a href="mailto:johndoe@email.com">johndoe@email.com</a></td>
-              <td class="role"><span>Employé</span><i class="fa-solid fa-user"></i></td>
-              <td class="delete"><button><span>Supprimer</span><i class="fa-solid fa-trash-can"></i></button></td>
+            <tr v-for="user in users" :key="user.id" :data-id="user.id">
+              <td class="image">
+                <img v-if="user.picture === null" src="../assets/user.svg">
+                <img v-else :src="user.picture">
+              </td>
+              <td class="username">{{user.pseudo}}</td>
+              <td class="email">{{user.email}}</td>
+              <td class="role">
+                <span v-if="user.roleId === 1">Employé</span> 
+                <span v-else-if="user.roleId === 2">Admin</span> 
+                <i v-if="user.roleId === 1" class="fa-solid fa-user"></i>
+                <i v-else-if="user.roleId === 2" class="fa-solid fa-user-gear"></i>
+              </td>
+              <td class="delete">
+                <button @click="deleteUser">
+                  <span>Supprimer</span>
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </td>
             </tr>
           </table>
         </div>
@@ -76,12 +132,17 @@ export default {
     font-size: 15px;
   }
 
+  .id{
+    text-align: center;
+    color: white;
+  }
+
   .image{
     img{
       width: 30px;
-      &:hover{
-        filter : brightness(150%);
-      }
+      height: 30px;
+      object-fit: cover;
+      border-radius: 100px;
     }
   }
 
@@ -90,13 +151,7 @@ export default {
   }
 
   .email{
-    a{
-      text-decoration: none;
-      color: $light-blue;
-      &:hover{
-        color: white;
-    }
-    }
+    color: $light-blue;
   }
 
   .role{
@@ -163,6 +218,9 @@ export default {
       text-align: center;
       img{
         width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 100px;
       }
     }
 

@@ -50,6 +50,7 @@ export default {
       </router-link>
       <nav class="nav-online">
         <div>
+          <router-link to="/admin"><i v-if="userInfo[4] === 2" class="fa-solid fa-users"></i></router-link>
           <i class="fa-solid fa-arrow-right-from-bracket" @click="logOut"></i>
           <router-link to="/params"><i class="fa-solid fa-screwdriver-wrench"></i></router-link>
         </div>

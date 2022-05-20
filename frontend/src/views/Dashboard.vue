@@ -26,6 +26,10 @@ export default {
     }
   },
   beforeMount(){
+    const moment = require('moment');
+    moment().format();
+    moment.locale('fr');
+    
     this.userBoardId = this.$route.params.id
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     axios.get(`http://localhost:3000/api/post/${this.userBoardId}`, {
@@ -38,8 +42,10 @@ export default {
       this.posts = response.data.posts
       this.user = response.data
       this.posts.forEach(post => {
+        post.date = moment(post.date).format('DD/MM/YY à HH:mm')
         let commentsCount = 0
-        post.comments.forEach(() =>{
+        post.comments.forEach(comment =>{
+          comment.date = moment(comment.date).format('DD/MM/YY à HH:mm')
           commentsCount ++
         });
         post.commentsNb = commentsCount
