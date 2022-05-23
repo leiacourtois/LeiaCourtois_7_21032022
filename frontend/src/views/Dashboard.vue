@@ -63,6 +63,9 @@ export default {
       this.$store.state.online = false
       this.online = false
       this.$router.push({path: '/login'});
+    },
+    goToDashboard() {
+      window.location.href = `http://localhost:8080/dashboard/${this.userInfo[0]}`;
     }
   }
 }
@@ -77,12 +80,11 @@ export default {
           <span class="line-logo"></span>
       </router-link>
       <nav>
+        <router-link to="/admin"><i v-if="userInfo[4] === 2" class="fa-solid fa-users"></i></router-link>
         <i class="fa-solid fa-arrow-right-from-bracket" @click="logOut"></i>
         <router-link to="/params"><i class="fa-solid fa-screwdriver-wrench"></i></router-link>
-        <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}">
-          <img v-if="userInfo[3] === null" src="../assets/user.svg">
-          <img v-else :src="userInfo[3]">
-        </router-link>
+        <img @click="goToDashboard" v-if="userInfo[3] === null" src="../assets/user.svg">
+        <img @click="goToDashboard" v-else :src="userInfo[3]">
       </nav>
       <router-link :to="{name: 'dashboard', params: { id: userBoardId }}">
         <img v-if="user.picture === null" src="../assets/user.svg" id="user-nav"> 
@@ -196,6 +198,7 @@ export default {
     }
     img{
       width: 50px;
+      cursor: pointer;
       height: 50px;
       object-fit: cover;
       border-radius: 100px;
@@ -217,8 +220,8 @@ export default {
 
   .log-on{
     position: absolute;
-    top: 115px;
-    left: 51%;
+    top: 110px;
+    left: 50%;
     transform: translate(-50%, 0%);
     width: 20px;
     height: 20px;
@@ -305,12 +308,12 @@ export default {
     }
 
     #logo{
-      width: 18%;
+      width: 16%;
     }
 
     #text{
       display: flex;
-      width: 100%;
+      width: 88%;
       margin-right: 40px;
     }
 

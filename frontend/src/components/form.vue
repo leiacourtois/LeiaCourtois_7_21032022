@@ -129,8 +129,10 @@ export default {
   <div>
     <form>
       <div class="user">
-        <img v-if="userInfo[3] === null" src="../assets/user.svg">
-        <img v-else :src="userInfo[3]">
+        <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}">
+          <img v-if="userInfo[3] === null" src="../assets/user.svg">
+          <img v-else :src="userInfo[3]">
+        </router-link>
         <h3 class="pseudo">{{userInfo[2]}}</h3>
       </div>
       <textarea @change="textPost" v-model="text" name="post" placeholder="Écrivez quelque chose"></textarea>
@@ -153,7 +155,7 @@ export default {
     </form>
     <div v-if="posted === true">
       <PostUsers
-        v-for="post in newPosts"
+        v-for="post in newPosts.slice().reverse()"
         :pfp="userInfo[3]"
         :pseudo="userInfo[2]"
         :image="post.image"
@@ -161,6 +163,7 @@ export default {
         :date="post.date"
         :userId="userInfo[0]"
         :id="post.id"
+        :commentsNb="0"
         :key="post.id"
       />
     </div>
@@ -198,6 +201,7 @@ export default {
 
   textarea{
     width: 100%;
+    font-size: 17px;
     min-width: 100%;
     max-width: 100%;
     height: 80px;

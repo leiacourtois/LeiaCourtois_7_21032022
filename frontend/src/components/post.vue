@@ -10,7 +10,8 @@ export default {
       showPost: true,
       comment: '',
       commentPosted: false,
-      newComments: []
+      newComments: [],
+      newCommentsCount : 0
     }
   },
   beforeMount() {
@@ -55,11 +56,14 @@ export default {
       })
       .then( response  => {
         this.comment = ''
+        this.newCommentsCount = 0
         this.commentPosted = true
         let newComment = response.data.data
         newComment.date = moment(newComment.date).format('DD/MM/YY à HH:mm')
         this.newComments.push(newComment);
-      
+        this.newComments.forEach( () =>{
+          this.newCommentsCount ++
+        });
         this.showComments = true
       })
       .catch(error => {
@@ -109,33 +113,42 @@ export default {
       <img :src="image">
     </div>
     <div class="last-row">
-      <div @click="showComments = !showComments" class="comments">
+      <div @click="showComments = !showComments" v-if="commentPosted === true" class="comments">
+        <i class="fa-solid fa-comments"></i>
+        <p v-if="commentsNb + newCommentsCount > 1" >{{commentsNb + newCommentsCount}} comentaires</p>
+        <p v-else >{{commentsNb + newCommentsCount}} comentaire</p>
+      </div>
+      <div @click="showComments = !showComments" v-else class="comments">
         <i class="fa-solid fa-comments"></i>
         <p v-if="commentsNb > 1" >{{commentsNb}} comentaires</p>
-        <p v-else >{{commentsNb}} comentaire</p>
+        <p v-else>{{commentsNb}} comentaire</p>
       </div>
     </div>
     <div v-show="showComments" class="comments-section">
 
+      <div v-for="comment in comments" :key="comment.id" :data-id="comment.id" class="comment">
+        <router-link :to="{name: 'dashboard', params: { id: comment.user.id }}">
+          <img v-if="comment.user.picture === null" src="../assets/user.svg">
+          <img v-else :src="comment.user.picture">
+        </router-link>
+        <div>
+          <span><h4>{{comment.user.pseudo}}</h4> <p>{{comment.date}}</p> <i v-if="comment.user.id === userInfo[0] || userInfo[4] === 2" class="fa-solid fa-trash-can" @click="deleteComment"></i></span>
+          <p>{{comment.text}}</p>
+        </div>
+      </div>
+      
       <aside v-if="commentPosted === true">
         <div v-for="newComment in newComments" :key="newComment.id" :data-id="newComment.id" class="comment">
-          <img v-if="userInfo[3] === null" src="../assets/user.svg">
-          <img v-else :src="userInfo[3]">
+          <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}">
+            <img v-if="userInfo[3] === null" src="../assets/user.svg">
+            <img v-else :src="userInfo[3]">
+          </router-link>
           <div>
             <span><h4>{{userInfo[2]}}</h4> <p>{{newComment.date}}</p> <i class="fa-solid fa-trash-can" @click="deleteComment"></i></span>
             <p>{{newComment.text}}</p>
           </div>
         </div>
       </aside>
-
-      <div v-for="comment in comments" :key="comment.id" :data-id="comment.id" class="comment">
-        <img v-if="comment.user.picture === null" src="../assets/user.svg">
-        <img v-else :src="comment.user.picture">
-        <div>
-          <span><h4>{{comment.user.pseudo}}</h4> <p>{{comment.date}}</p> <i v-if="comment.user.id === userInfo[0] || userInfo[4] === 2" class="fa-solid fa-trash-can" @click="deleteComment"></i></span>
-          <p>{{comment.text}}</p>
-        </div>
-      </div>
 
     </div>
     <div class="add-comment">

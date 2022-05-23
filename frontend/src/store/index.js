@@ -8,7 +8,7 @@ export default new Vuex.Store({
     online: false,
 
     regex:{
-      text: /^[-'a-zA-Z0-9À-ÖØ-öø-ÿœ\s#!^$()?+*.:,|]+$/,
+      text: /^[-'a-zA-Z0-9À-ÖØ-öø-ÿœ\s#!^$()?+*.:,|_]+$/,
       email: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,
       password: /^(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/
     }

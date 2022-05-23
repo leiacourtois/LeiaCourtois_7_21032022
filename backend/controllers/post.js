@@ -38,7 +38,7 @@ exports.getAllPosts = (req, res, next) => {
     ],
     order: [
       ['date', 'DESC'],
-      ['comments', 'date', 'DESC']
+      ['comments', 'date', 'ASC']
     ]
   }).then(
     (posts) => {
@@ -71,6 +71,7 @@ exports.getAllUserPosts = (req, res, next) => {
     ],
     order: [
       ['posts', 'date', 'DESC'],
+      ['comments', 'date', 'ASC']
     ]
   })
   .then(
