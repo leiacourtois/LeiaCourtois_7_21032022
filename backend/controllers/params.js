@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require('dotenv').config()
 const passwordValidator = require('password-validator');
 const db = require('../models');
 const fs = require('fs');
@@ -161,16 +162,23 @@ exports.deleteUser = (req, res, next) => {
 
 };
 
-exports.getAllUsers = (req, res, next) => { 
-  User.findAll()
-  .then((users) => {
-    res.status(200).json(users);
-  })
-  .catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
+exports.getAllUsers = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+  const userRole = decodedToken.role;
+  if (userRole == 2) {
+    User.findAll()
+    .then((users) => {
+      res.status(200).json(users);
+    })
+    .catch(
+      (error) => {
+        res.status(400).json({
+          error: error
+        });
+      }
+    );
+  }else{
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 }

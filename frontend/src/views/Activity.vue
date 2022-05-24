@@ -30,6 +30,7 @@ export default {
     moment.locale('fr');
 
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+
     axios.get('http://localhost:3000/api/post/', {
       headers:{
           'Authorization' : `Token ${this.userInfo[1]}`
