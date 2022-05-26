@@ -25,7 +25,7 @@ export default {
   methods: {
     textPost(){
       let testVar = this.$store.state.regex.text.test(this.text);
-      if(testVar === true){
+      if(testVar){
         this.sendVar = true
       } else{
         this.sendVar = false
@@ -81,7 +81,7 @@ export default {
       moment().format();
       moment.locale('fr');
 
-      if(this.sendVar === true){
+      if(this.sendVar){
         let formData = new FormData()
         let image = this.curFiles[0]
 
@@ -153,7 +153,7 @@ export default {
         <button @click="sendPost" type="reset">Publier</button>
       </div>
     </form>
-    <div v-if="posted === true">
+    <div v-if="posted">
       <PostUsers
         v-for="post in newPosts.slice().reverse()"
         :pfp="userInfo[3]"

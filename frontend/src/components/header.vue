@@ -55,8 +55,8 @@ export default {
           <router-link to="/params"><i class="fa-solid fa-screwdriver-wrench"></i></router-link>
         </div>
         <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}">
-          <img v-if="userInfo[3] === null" src="../assets/user.svg" id="user-nav">
-          <img v-else :src="userInfo[3]" id="user-nav">
+          <img v-if="userInfo[3] === null" src="../assets/user.svg" class="user-nav">
+          <img v-else :src="userInfo[3]" class="user-nav">
           <span class="log-on"></span>
         </router-link>
       </nav>
@@ -177,7 +177,7 @@ export default {
     }
   }
 
-  #user-nav{
+  .user-nav{
     width: 50px;
     height: 50px;
     object-fit: cover;
@@ -256,7 +256,7 @@ export default {
       margin: 17px 29px 0 -10px;
     }
 
-    #user-nav{
+    .user-nav{
       width: 60px;
       height: 60px;
     }

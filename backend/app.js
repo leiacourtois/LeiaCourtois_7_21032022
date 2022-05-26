@@ -14,11 +14,11 @@ const limiterLogin = rateLimit({
   legacyHeaders: false,
 }) 
 
-/*db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync({ force: true }).then(() => {
   db.role.create({ name : "employé" })
   db.role.create({ name : "admin" })
   console.log("Drop and re-sync db.");
-});*/
+});
 
 const app = express();
 

@@ -24,14 +24,14 @@ export default {
   methods: {
     emailInput() {
       let testVar = this.$store.state.regex.email.test(this.email);
-      if(testVar === true){
+      if(testVar){
         this.sendVar = true
       } else{
         this.sendVar = false
       }
     },
     sendData() {
-      if(this.sendVar === true){
+      if(this.sendVar){
         let user = {
           email : this.email,
           password : this.password,

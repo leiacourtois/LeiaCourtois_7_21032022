@@ -38,7 +38,6 @@ export default {
       }
     })
     .then(response => {
-      console.log(response)
       this.posts = response.data.posts
       this.user = response.data
       this.posts.forEach(post => {
@@ -90,7 +89,6 @@ export default {
         <img v-if="user.picture === null" src="../assets/user.svg" id="user-nav"> 
         <img v-else :src="user.picture" id="user-nav">
       </router-link>
-      <span class="log-on"></span>
     </header>
 
     <main>
@@ -218,19 +216,6 @@ export default {
     border-radius: 100px;
   }
 
-  .log-on{
-    position: absolute;
-    top: 110px;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    width: 20px;
-    height: 20px;
-    margin-left: 24px;
-    background: #2de500;
-    border-radius: 20px;
-    border: 4px solid $dark-grey;
-  }
-
   main{
     padding: 60px 15px;
   }
@@ -326,15 +311,6 @@ export default {
       width: 100px;
       height: 100px;
       border: 5px solid $dark-grey;
-    }
-
-    .log-on{
-      top: 130px;
-      left: 50.3%;
-      margin-left: 28px;
-      height: 25px;
-      width: 25px;
-      border-width: 5px;
     }
 
     main{

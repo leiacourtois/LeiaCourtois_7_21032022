@@ -90,7 +90,7 @@ export default {
     },
     pseudoInput() {
       let testVar = this.$store.state.regex.text.test(this.user.pseudo);
-      if(testVar === true){
+      if(testVar){
         this.sendVar = true
       } else{
         this.sendVar = false
@@ -98,7 +98,7 @@ export default {
     },
     emailInput() {
       let testVar = this.$store.state.regex.email.test(this.user.email);
-      if(testVar === true){
+      if(testVar){
         this.sendVar = true
       } else{
         this.sendVar = false
@@ -106,7 +106,7 @@ export default {
     },
     bioInput() {
       let testVar = this.$store.state.regex.text.test(this.user.bio);
-      if(testVar === true){
+      if(testVar){
         this.sendVar = true
       } else{
         this.sendVar = false
@@ -114,14 +114,14 @@ export default {
     },
     passwordInput() {
       let testVar = this.$store.state.regex.password.test(this.pw);
-      if(testVar === true){
+      if(testVar){
         this.sendVar = true
       } else{
         this.sendVar = false
       }
     },
     sendUserParams() {
-      if(this.sendVar === true || this.curFiles){
+      if(this.sendVar || this.curFiles){
         let formData = new FormData()
         let image = this.curFiles[0]
 
@@ -157,13 +157,12 @@ export default {
       }
     },
     sendPasswordParams() {
-      if(this.sendVar === true){
+      if(this.sendVar){
         if(this.pw === this.pwConfirmation){
           let password = {
             oldpassword : this.oldpw,
             newpassword : this.pw,
           }
-          console.log(password)
           axios.put(`http://localhost:3000/api/params/password/${this.user.id}`, password, {
             headers:{
                 'Content-Type': 'application/json',

@@ -113,7 +113,7 @@ export default {
       <img :src="image">
     </div>
     <div class="last-row">
-      <div @click="showComments = !showComments" v-if="commentPosted === true" class="comments">
+      <div @click="showComments = !showComments" v-if="commentPosted" class="comments">
         <i class="fa-solid fa-comments"></i>
         <p v-if="commentsNb + newCommentsCount > 1" >{{commentsNb + newCommentsCount}} comentaires</p>
         <p v-else >{{commentsNb + newCommentsCount}} comentaire</p>
@@ -137,7 +137,7 @@ export default {
         </div>
       </div>
       
-      <aside v-if="commentPosted === true">
+      <aside v-if="commentPosted">
         <div v-for="newComment in newComments" :key="newComment.id" :data-id="newComment.id" class="comment">
           <router-link :to="{name: 'dashboard', params: { id: userInfo[0] }}">
             <img v-if="userInfo[3] === null" src="../assets/user.svg">

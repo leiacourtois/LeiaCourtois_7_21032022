@@ -26,7 +26,7 @@ export default {
   methods: {
     pseudoInput() {
       let testVar = this.$store.state.regex.text.test(this.pseudo);
-      if(testVar === true){
+      if(testVar){
         document.getElementsByClassName('errorMsg__Pseudo')[0].innerHTML= ''
         this.sendVar = true
       } else{
@@ -36,7 +36,7 @@ export default {
     },
     emailInput() {
       let testVar = this.$store.state.regex.email.test(this.email);
-      if(testVar === true){
+      if(testVar){
         document.getElementsByClassName('errorMsg__Email')[0].innerHTML= ''
         this.sendVar = true
       } else{
@@ -46,7 +46,7 @@ export default {
     },
     passwordInput() {
       let testVar = this.$store.state.regex.password.test(this.password);
-      if(testVar === true){
+      if(testVar){
         document.getElementsByClassName('errorMsg__pw')[0].innerHTML= ''
         this.sendVar = true
       } else{
@@ -55,7 +55,7 @@ export default {
       }
     },
     sendData() {
-      if(this.sendVar === true){
+      if(this.sendVar){
         if( this.password === this.passwordConfirmation){
           let user = {
             pseudo : this.pseudo,

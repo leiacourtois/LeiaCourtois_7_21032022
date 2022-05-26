@@ -6,7 +6,7 @@ const sequelize = new Sequelize(`${process.env.DATABASE}`, `${process.env.DB_USE
   operatorsAliases: false,
 });
 
-sequelize.sync(); 
+//sequelize.sync(); 
 
 const db = {};
 db.Sequelize = Sequelize;
