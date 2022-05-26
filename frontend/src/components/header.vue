@@ -75,7 +75,7 @@ export default {
   }
 
   #text{
-    width: 100%;
+    width: 87%;
     max-width: 330px;
   }
 
@@ -201,7 +201,7 @@ export default {
     }
 
     #text{
-      width: 100%;
+      width: 87%;
     }
 
     /*offline*/
