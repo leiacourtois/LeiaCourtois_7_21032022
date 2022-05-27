@@ -293,12 +293,12 @@ export default {
     }
 
     #logo{
-      width: 16%;
+      width: 15%;
     }
 
     #text{
       display: flex;
-      width: 88%;
+      width: 85%;
       margin-right: 40px;
     }
 
@@ -324,7 +324,7 @@ export default {
     }
 
     .user-info{
-      width: 17%;
+      width: 270px;
       position: fixed;
       right: 8px;
       margin: 0;
@@ -346,7 +346,7 @@ export default {
       position: fixed;
       right: 8px;
       margin-top: 120px;
-      width: 17.5%;
+      width: 280px;
       min-width: 207px;
       p{
         font-size: 18px;
